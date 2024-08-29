@@ -27937,7 +27937,6 @@ function buildSubject ({ writeToFile, subject, author, authorUrl, owner, repo })
   const prs = []
   let output = subject
   if (writeToFile) {
-    const authorLine = author ? ` by [@${author}](${authorUrl})` : ''
     if (hasPR) {
       const prMatch = subject.match(rePrEnding)
       const msgOnly = subject.slice(0, prMatch[0].length * -1)
@@ -27945,23 +27944,20 @@ function buildSubject ({ writeToFile, subject, author, authorUrl, owner, repo })
         prs.push(prId)
         return `[#${prId}](${githubServerUrl}/${owner}/${repo}/pull/${prId})`
       })
-      output += `*(PR [#${prMatch[1]}](${githubServerUrl}/${owner}/${repo}/pull/${prMatch[1]})${authorLine})*`
+      output += `*(PR [#${prMatch[1]}](${githubServerUrl}/${owner}/${repo}/pull/${prMatch[1]}))*`
     } else {
       output = subject.replace(rePrId, (m, prId) => {
         return `[#${prId}](${githubServerUrl}/${owner}/${repo}/pull/${prId})`
       })
-      if (author) {
-        output += ` *(commit by [@${author}](${authorUrl}))*`
-      }
     }
   } else {
     if (hasPR) {
       output = subject.replace(rePrEnding, (m, prId) => {
         prs.push(prId)
-        return author ? `*(PR #${prId} by @${author})*` : `*(PR #${prId})*`
+        return `*(PR #${prId})*`
       })
     } else {
-      output = author ? `${subject} *(commit by @${author})*` : subject
+      output = subject
     }
   }
   return {
@@ -27993,9 +27989,8 @@ async function main () {
   let previousTag = null
 
   if (tag && (fromTag || toTag)) {
-    return core.setFailed(`Must provide EITHER input tag OR (fromTag and toTag), not both!`)
+    return core.setFailed('Must provide EITHER input tag OR (fromTag and toTag), not both!')
   } else if (tag) {
-
     // GET LATEST + PREVIOUS TAGS
 
     core.info(`Using input tag: ${tag}`)
@@ -28212,8 +28207,8 @@ async function main () {
         owner,
         repo
       })
-      changesFile.push(`- [\`${commit.sha.substring(0, 7)}\`](${commit.url}) - ${scope}${subjectFile.output}`)
-      changesVar.push(`- [\`${commit.sha.substring(0, 7)}\`](${commit.url}) - ${scope}${subjectVar.output}`)
+      changesFile.push(`- ${scope}${subjectFile.output}`)
+      changesVar.push(`- ${scope}${subjectVar.output}`)
 
       if (includeRefIssues && subjectVar.prs.length > 0) {
         for (const prId of subjectVar.prs) {
@@ -28306,6 +28301,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     output += lines.slice(0, firstVersionLine).join('\n') + '\n'
   }
   output += `## [${latestTag.name}] - ${currentISODate}\n${changesFile.join('\n')}\n`
+  core.setOutput('slack-changelog', output)
   if (firstVersionLine < lines.length) {
     output += '\n' + lines.slice(firstVersionLine).join('\n')
   }

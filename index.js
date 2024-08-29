@@ -81,9 +81,8 @@ async function main () {
   let previousTag = null
 
   if (tag && (fromTag || toTag)) {
-    return core.setFailed(`Must provide EITHER input tag OR (fromTag and toTag), not both!`)
+    return core.setFailed('Must provide EITHER input tag OR (fromTag and toTag), not both!')
   } else if (tag) {
-
     // GET LATEST + PREVIOUS TAGS
 
     core.info(`Using input tag: ${tag}`)
@@ -394,6 +393,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     output += lines.slice(0, firstVersionLine).join('\n') + '\n'
   }
   output += `## [${latestTag.name}] - ${currentISODate}\n${changesFile.join('\n')}\n`
+  core.setOutput('slack-changelog', output)
   if (firstVersionLine < lines.length) {
     output += '\n' + lines.slice(firstVersionLine).join('\n')
   }

@@ -53,6 +53,8 @@ inputs:
 outputs:
   changes:
     description: Generated changelog
+  slack-changelog:
+    description: Changelog for current version
 runs:
   using: 'node20'
   main: 'dist/index.js'
