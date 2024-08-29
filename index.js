@@ -273,8 +273,8 @@ async function main () {
       changesFile.push('')
       changesVar.push('')
     }
-    changesFile.push(useGitmojis ? `### ${type.icon} ${type.header}` : `### ${type.header}`)
-    changesVar.push(useGitmojis ? `### ${type.icon} ${type.header}` : `### ${type.header}`)
+    changesFile.push(useGitmojis ? `**${type.icon} ${type.header}**` : `**${type.header}**`)
+    changesVar.push(useGitmojis ? `**${type.icon} ${type.header}**` : `**${type.header}**`)
 
     const relIssuePrefix = type.relIssuePrefix || 'addresses'
 
