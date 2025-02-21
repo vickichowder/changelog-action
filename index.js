@@ -18,6 +18,7 @@ const allTypes = [
   { types: ['doc', 'docs'], header: 'Documentation Changes', icon: ':memo:' },
   { types: ['style'], header: 'Code Style Changes', icon: ':art:' },
   { types: ['chore'], header: 'Chores', icon: ':wrench:' },
+  { types: ['revert'], header: 'Reverts', icon: ':uno_reverse:' },
   { types: ['other'], header: 'Other Changes', icon: ':flying_saucer:' }
 ]
 
